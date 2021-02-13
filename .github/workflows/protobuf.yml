@@ -16,10 +16,10 @@ jobs:
           cp $GameTracking_dir/Protobufs/{cstrike15_*.proto,engine_gcmessages.proto,netmessages.proto,steammessages.proto} pkg/demoinfocs/msg/proto
 
           if [[ ! `git status --porcelain` ]]; then
-              echo '::set-env name=PROTOBUFS_CHANGED::false'
+              echo "PROTOBUFS_CHANGED=false" >> $GITHUB_ENV
               exit 0
           else
-              echo '::set-env name=PROTOBUFS_CHANGED::true'
+              echo "PROTOBUFS_CHANGED=true" >> $GITHUB_ENV
           fi
 
       - name: Install Go
@@ -56,16 +56,17 @@ jobs:
         if: env.PROTOBUFS_CHANGED == 'true'
         run: |
           commit_sha=$(pushd $GameTracking_dir > /dev/null && git rev-parse HEAD && popd > /dev/null)
-          echo "::set-env name=COMMIT_SHA::$commit_sha"
+          echo "COMMIT_SHA=$commit_sha" >> $GITHUB_ENV
 
       - name: Create Pull Request
         id: pr
         if: env.PROTOBUFS_CHANGED == 'true'
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           title: "protobuf: updated to ${{ env.COMMIT_SHA }}"
           base: master
           branch: update-protobufs
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit-message: |
             protobuf: updated to ${{ env.COMMIT_SHA }}
 

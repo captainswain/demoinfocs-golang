@@ -15,6 +15,9 @@ linters:
     - lll
     - typecheck
     - gomnd
+    - exhaustivestruct
+    - godot
+    - gofumpt
 issues:
   exclude-rules:
     # Exclude some linters from running on tests files.

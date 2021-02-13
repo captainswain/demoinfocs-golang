@@ -193,7 +193,7 @@ func (ts *TeamState) MoneySpentThisRound() (value int) {
 	return
 }
 
-// MoneySpentThisRound returns the total amount of cash spent by the whole team during the whole game up to the current point.
+// MoneySpentTotal returns the total amount of cash spent by the whole team during the whole game up to the current point.
 func (ts *TeamState) MoneySpentTotal() (value int) {
 	for _, pl := range ts.Members() {
 		value += pl.MoneySpentTotal()
@@ -240,4 +240,34 @@ func ConvertSteamID32To64(steamID32 uint32) uint64 {
 // See https://developer.valvesoftware.com/wiki/SteamID
 func ConvertSteamID64To32(steamID64 uint64) uint32 {
 	return uint32(steamID64 - steamID64IndividualIdentifier)
+}
+
+// Color is the type for the various colors constants.
+type Color int
+
+// Color constants give information about which color a player has.
+const (
+	Grey Color = iota - 1
+	Yellow
+	Purple
+	Green
+	Blue
+	Orange
+)
+
+var strColors = map[Color]string{
+	Grey:   "Grey",
+	Yellow: "Yellow",
+	Purple: "Purple",
+	Green:  "Green",
+	Blue:   "Blue",
+	Orange: "Orange",
+}
+
+func (c Color) String() string {
+	if _, exists := strColors[c]; !exists {
+		return "Unknown-Color"
+	}
+
+	return strColors[c]
 }
